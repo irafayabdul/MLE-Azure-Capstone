@@ -1,0 +1,291 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "telco-churn-model-aci-service",
+    "description": "API specification for the Azure Machine Learning service telco-churn-model-aci-service",
+    "version": "1.0"
+  },
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "For example: Bearer abc123"
+    }
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "ServiceHealthCheck",
+        "description": "Simple health check endpoint to ensure the service is up at any given point.",
+        "responses": {
+          "200": {
+            "description": "If service is up and running, this response will be returned with the content 'Healthy'",
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "application/json": "Healthy"
+            }
+          },
+          "default": {
+            "description": "The service failed to execute due to an error.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/score": {
+      "post": {
+        "operationId": "RunMLService",
+        "description": "Run web service's model and get the prediction output",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "serviceInputPayload",
+            "in": "body",
+            "description": "The input payload for executing the real-time machine learning service.",
+            "schema": {
+              "$ref": "#/definitions/ServiceInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The service processed the input correctly and provided a result prediction, if applicable.",
+            "schema": {
+              "$ref": "#/definitions/ServiceOutput"
+            }
+          },
+          "default": {
+            "description": "The service failed to execute due to an error.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/swagger.json": {
+      "get": {
+        "operationId": "GetSwaggerSpec",
+        "description": "Get the Swagger specification.",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "enum": [
+              2,
+              3
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Swagger specification.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "The service failed to execute due to an error.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ServiceInput": {
+      "type": "object",
+      "properties": {
+        "Inputs": {
+          "type": "object",
+          "required": [
+            "data"
+          ],
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "gender",
+                  "SeniorCitizen",
+                  "Partner",
+                  "Dependents",
+                  "tenure",
+                  "PhoneService",
+                  "MultipleLines",
+                  "InternetService",
+                  "OnlineSecurity",
+                  "OnlineBackup",
+                  "DeviceProtection",
+                  "TechSupport",
+                  "StreamingTV",
+                  "StreamingMovies",
+                  "Contract",
+                  "PaperlessBilling",
+                  "PaymentMethod",
+                  "MonthlyCharges",
+                  "TotalCharges"
+                ],
+                "properties": {
+                  "gender": {
+                    "type": "string"
+                  },
+                  "SeniorCitizen": {
+                    "type": "boolean"
+                  },
+                  "Partner": {
+                    "type": "boolean"
+                  },
+                  "Dependents": {
+                    "type": "boolean"
+                  },
+                  "tenure": {
+                    "type": "integer",
+                    "format": "int64"
+                  },
+                  "PhoneService": {
+                    "type": "boolean"
+                  },
+                  "MultipleLines": {
+                    "type": "string"
+                  },
+                  "InternetService": {
+                    "type": "string"
+                  },
+                  "OnlineSecurity": {
+                    "type": "string"
+                  },
+                  "OnlineBackup": {
+                    "type": "string"
+                  },
+                  "DeviceProtection": {
+                    "type": "string"
+                  },
+                  "TechSupport": {
+                    "type": "string"
+                  },
+                  "StreamingTV": {
+                    "type": "string"
+                  },
+                  "StreamingMovies": {
+                    "type": "string"
+                  },
+                  "Contract": {
+                    "type": "string"
+                  },
+                  "PaperlessBilling": {
+                    "type": "boolean"
+                  },
+                  "PaymentMethod": {
+                    "type": "string"
+                  },
+                  "MonthlyCharges": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "TotalCharges": {
+                    "type": "number",
+                    "format": "double"
+                  }
+                }
+              },
+              "format": "pandas.DataFrame:records"
+            }
+          }
+        },
+        "GlobalParameters": {
+          "type": "object",
+          "required": [
+            "method"
+          ],
+          "properties": {
+            "method": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "example": {
+        "Inputs": {
+          "data": [
+            {
+              "gender": "example_value",
+              "SeniorCitizen": false,
+              "Partner": false,
+              "Dependents": false,
+              "tenure": 0,
+              "PhoneService": false,
+              "MultipleLines": "example_value",
+              "InternetService": "example_value",
+              "OnlineSecurity": "example_value",
+              "OnlineBackup": "example_value",
+              "DeviceProtection": "example_value",
+              "TechSupport": "example_value",
+              "StreamingTV": "example_value",
+              "StreamingMovies": "example_value",
+              "Contract": "example_value",
+              "PaperlessBilling": false,
+              "PaymentMethod": "example_value",
+              "MonthlyCharges": 0,
+              "TotalCharges": 0
+            }
+          ]
+        },
+        "GlobalParameters": {
+          "method": "predict"
+        }
+      }
+    },
+    "ServiceOutput": {
+      "type": "object",
+      "required": [
+        "Results"
+      ],
+      "properties": {
+        "Results": {
+          "type": "array",
+          "items": {
+            "type": "boolean"
+          },
+          "format": "numpy.ndarray"
+        }
+      },
+      "example": {
+        "Results": [
+          "False"
+        ]
+      }
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

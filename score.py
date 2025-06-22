@@ -8,6 +8,8 @@ import joblib
 
 import azureml.automl.core
 from azureml.automl.core.shared import logging_utilities, log_server
+from azureml.telemetry import INSTRUMENTATION_KEY
+
 
 from inference_schema.schema_decorators import input_schema, output_schema
 from inference_schema.parameter_types.numpy_parameter_type import NumpyParameterType
@@ -23,6 +25,12 @@ sample_global_params = StandardPythonParameterType({"method": method_sample})
 result_sample = NumpyParameterType(np.array([False]))
 output_sample = StandardPythonParameterType({'Results':result_sample})
 
+try:
+    log_server.enable_telemetry(INSTRUMENTATION_KEY)
+    log_server.set_verbosity('INFO')
+    logger = logging.getLogger('azureml.automl.core.scoring_script_v2')
+except:
+    pass
 
 def get_model_root(model_root: str):
     root_contents = os.listdir(model_root)
@@ -39,7 +47,7 @@ def init():
     # This name is model.id of model that we want to deploy deserialize the model file back
     # into a sklearn model
     model_root = get_model_root(os.getenv('AZUREML_MODEL_DIR'))
-    model_path = os.path.join(model_root, 'best_hyperdrive_model.pkl')
+    model_path = os.path.join(model_root, 'automlBestModel.pkl')
     path = os.path.normpath(model_path)
     path_split = path.split(os.sep)
     log_server.update_custom_dimensions({'model_name': path_split[-3], 'model_version': path_split[-2]})
