@@ -1,4 +1,4 @@
-# Customer Churn Prediction 
+# Customer Churn Prediction Test
 This is the Capstone Project for MLE with MS-Azure NanoDegree of Udacity.
 We try to predict customer churn from the customer information of attributes and services.
 
